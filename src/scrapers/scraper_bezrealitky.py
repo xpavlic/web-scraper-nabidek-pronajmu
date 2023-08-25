@@ -3,6 +3,7 @@ author: Mark Barzali
 """
 
 import json
+import logging
 from abc import ABC as abstract
 from typing import ClassVar
 
@@ -21,7 +22,7 @@ class ScraperBezrealitky(ScraperBase):
     file: ClassVar[str] = "./graphql/bezrealitky.json"
 
     API: ClassVar[str] = "https://api.bezrealitky.cz/"
-    OFFER_TYPE: ClassVar[str] = "PRONAJEM"
+    OFFER_TYPE: ClassVar[str] = "PRODEJ"
     ESTATE_TYPE: ClassVar[str] = "BYT"
     BRNO: ClassVar[str] = "R438171"
 
@@ -53,9 +54,10 @@ class ScraperBezrealitky(ScraperBase):
 
     def _patch_config(self):
         match = {
-            "estateType": self.ESTATE_TYPE,
-            "offerType": self.OFFER_TYPE,
+            "estateType": [self.ESTATE_TYPE],
+            "offerType": [self.OFFER_TYPE],
             "disposition": self.get_dispositions_data(),
+            "priceTo": 5300000,
             "regionOsmIds": [self.BRNO],
         }
         self._config["variables"].update(match)

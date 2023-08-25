@@ -25,7 +25,7 @@ def create_scrapers(dispositions: Disposition) -> list[ScraperBase]:
         ScraperRealingo(dispositions),
         ScraperRemax(dispositions),
         ScraperSreality(dispositions),
-        ScraperUlovDomov(dispositions),
+        #ScraperUlovDomov(dispositions), Pouze nájmy
         ScraperBezrealitky(dispositions),
     ]
 

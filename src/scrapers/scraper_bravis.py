@@ -15,7 +15,7 @@ class ScraperBravis(ScraperBase):
     name = "BRAVIS"
     logo_url = "https://www.bravis.cz/content/img/logo-small.png"
     color = 0xCE0020
-    base_url = "https://www.bravis.cz/pronajem-bytu"
+    base_url = "https://www.bravis.cz/prodej-bytu"
 
 
     def build_response(self) -> requests.Response:
@@ -32,7 +32,7 @@ class ScraperBravis(ScraperBase):
         if Disposition.FLAT_5_UP in self.disposition:
             url += "typ-nemovitosti-byt+5=&"
 
-        url += "typ-nabidky=pronajem-bytu&lokalita=cele-brno&vybavenost=nezalezi&q=&action=search&s=1-20-order-0"
+        url += "typ-nabidky=prodej-bytu&lokalita=cele-brno&vybavenost=nezalezi&q=&action=search&s=1-20-order-0"
 
         logging.debug("BRAVIS request: %s", url)
 
@@ -50,12 +50,19 @@ class ScraperBravis(ScraperBase):
 
             params = item.select(".params > li")
 
+            str_price = re.sub(r"[^\d]", "", [text for text in item.select_one(".price").stripped_strings][0])
+            price = 0
+            if str_price:
+                price = int(str_price)
+            if price > 5300000:
+                continue
+
             items.append(RentalOffer(
                 scraper = self,
                 link = urljoin(self.base_url, item.select_one("a.main").get("href")),
                 title = "Pronájem " + params[1].find("strong").get_text().strip() + ", " + params[2].find("strong").get_text().strip(),
                 location = item.select_one(".location").get_text().strip(),
-                price = int(re.sub(r"[^\d]", "", [text for text in item.select_one(".price").stripped_strings][0])),
+                price = price,
                 image_url = urljoin(self.base_url, item.select_one(".img > img").get("src"))
             ))
 

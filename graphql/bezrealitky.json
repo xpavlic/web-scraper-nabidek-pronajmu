@@ -1,8 +1,8 @@
 {
     "operationName": "AdvertList",
     "variables": {
-        "limit": 15,
-        "offset": 75,
+        "limit": 50,
+        "offset": 0,
         "order": "TIMEORDER_DESC",
         "locale": "CS",
         "offerType": [],

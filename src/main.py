@@ -57,23 +57,20 @@ async def process_latest_offers():
 
     logging.info("Offers fetched (new: {})".format(len(new_offers)))
 
-    if not first_time:
-        for offer in new_offers:
-            embed = discord.Embed(
-                title=offer.title,
-                url=offer.link,
-                description=offer.location,
-                timestamp=datetime.utcnow(),
-                color=offer.scraper.color
-            )
+    for offer in new_offers:
+        embed = discord.Embed(
+            title=offer.title,
+            url=offer.link,
+            description=offer.location,
+            timestamp=datetime.utcnow(),
+            color=offer.scraper.color
+        )
 
-            embed.add_field(name="Cena", value=str(offer.price) + " Kč")
-            embed.set_author(name=offer.scraper.name, icon_url=offer.scraper.logo_url)
-            embed.set_image(url=offer.image_url)
+        embed.add_field(name="Cena", value=str(offer.price) + " Kč")
+        embed.set_author(name=offer.scraper.name, icon_url=offer.scraper.logo_url)
+        embed.set_image(url=offer.image_url)
 
-            await channel.send(embed=embed)
-    else:
-        logging.info("No previous offers, first fetch is running silently")
+        await channel.send(embed=embed)
 
     global daytime, interval_time
     if daytime != get_current_daytime():  # Pokud stary daytime neodpovida novemu
